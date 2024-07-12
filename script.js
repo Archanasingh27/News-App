@@ -1,11 +1,8 @@
-const API_KEY = "1d3a0eefa97b499d8fbc4ee93eeb40b7";
+
+const API_KEY = "cf3323fec3654bd883ee275932451bb9";
 const url = "https://newsapi.org/v2/everything?q=";
 
 window.addEventListener("load", () => fetchNews("India"));
-
-function reload() {
-    window.location.reload();
-}
 
 async function fetchNews(query) {
     const res = await fetch(`${url}${query}&apiKey=${API_KEY}`);
@@ -14,17 +11,18 @@ async function fetchNews(query) {
 }
 
 function bindData(articles) {
-    const cardsContainer = document.getElementById("cards-container");
+    const cardsContainer = document.getElementById("cardscontainer");
     const newsCardTemplate = document.getElementById("template-news-card");
 
     cardsContainer.innerHTML = "";
 
     articles.forEach((article) => {
         if (!article.urlToImage) return;
+
         const cardClone = newsCardTemplate.content.cloneNode(true);
         fillDataInCard(cardClone, article);
         cardsContainer.appendChild(cardClone);
-    });
+    })
 }
 
 function fillDataInCard(cardClone, article) {
@@ -34,18 +32,16 @@ function fillDataInCard(cardClone, article) {
     const newsDesc = cardClone.querySelector("#news-desc");
 
     newsImg.src = article.urlToImage;
-    newsTitle.innerHTML = article.title;
-    newsDesc.innerHTML = article.description;
+    newsTitle.innerHTML = `${article.title.slice(0, 60)}...`;
+    newsDesc.innerHTML = `${article.description.slice(0, 150)}...`;
 
-    const date = new Date(article.publishedAt).toLocaleString("en-US", {
-        timeZone: "Asia/Jakarta",
-    });
+    const date = new Date(article.publishedAt).toLocaleString("en-US", { timeZone: "Asia/Jakarta" })
 
     newsSource.innerHTML = `${article.source.name} · ${date}`;
 
     cardClone.firstElementChild.addEventListener("click", () => {
         window.open(article.url, "_blank");
-    });
+    })
 }
 
 let curSelectedNav = null;
@@ -66,4 +62,4 @@ searchButton.addEventListener("click", () => {
     fetchNews(query);
     curSelectedNav?.classList.remove("active");
     curSelectedNav = null;
-});
+})
